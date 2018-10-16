@@ -4,6 +4,7 @@
   "description": "Convert sql file to array of queries",
   "main": "index.js",
   "scripts": {
+    "eslint": "eslint",
     "test": "NODE_ENV=test mocha --require intelli-espower-loader test ./test"
   },
   "repository": {
