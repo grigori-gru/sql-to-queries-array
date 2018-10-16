@@ -1,0 +1,32 @@
+{
+  "name": "sql-to-queries-array",
+  "version": "1.0.0",
+  "description": "Convert sql file to array of queries",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test nyc mocha --require intelli-espower-loader test ./test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grigori-gru/sql-to-queries-array.git"
+  },
+  "keywords": [
+    "sql",
+    "file",
+    "js",
+    "parse"
+  ],
+  "author": "Grigori Grudinin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grigori-gru/sql-to-queries-array/issues"
+  },
+  "homepage": "https://github.com/grigori-gru/sql-to-queries-array#readme",
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-google": "^0.10.0",
+    "intelli-espower-loader": "1.0.1",
+    "mocha": "5.2.0",
+    "power-assert": "1.6.1"
+  }
+}
