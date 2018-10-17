@@ -6,7 +6,7 @@ const parse = data => data
     .split('\n')
     .filter(Boolean)
     .map(str => str.trim())
-    .filter(str => !str.startsWith('--'))
+    .filter(str => !str.startsWith('--') && !str.startsWith('/*'))
     .join(' ')
     .split(';')
     .filter(Boolean)

@@ -1,6 +1,8 @@
 -- Some comment
 --
 
+/* COMMENT */
+
 SELECT * FROM table_name
     WHERE name = 'name';
 
