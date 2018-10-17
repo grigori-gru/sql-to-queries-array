@@ -1,5 +1,6 @@
+const {resolve} = require('path');
 const {extname} = require('path');
-const {readFile} = require('fs').promises;
+const {readFile, lstat, readdir} = require('fs').promises;
 
 const parse = data => data
     .split('\n')
@@ -11,7 +12,33 @@ const parse = data => data
     .filter(Boolean)
     .map(str => `${str.trim()};`);
 
-module.exports = async path => {
+const isDir = async path => {
+    const stat = await lstat(path);
+
+    return stat.isDirectory();
+};
+
+const getSortedFilesPath = (arr, releaseName, path) =>
+    arr.filter(name => name.includes(releaseName))
+        .sort((name1, name2) => {
+            const one = name1.replace(/\D+/g, '');
+            const second = name2.replace(/\D+/g, '');
+
+            return one - second;
+        })
+        .map(name => resolve(path, name));
+
+const getArray = async (path, releaseName) => {
+    if (await isDir(path)) {
+        const filesNames = await readdir(path);
+
+        const sqlFiles = getSortedFilesPath(filesNames, releaseName, path);
+
+        const queriesArr = await Promise.all(sqlFiles.map(getArray));
+
+        return queriesArr.reduce((acc, val) => [...acc, ...val], []);
+    }
+
     const fileExtension = extname(path);
 
     if (fileExtension !== '.sql') {
@@ -22,3 +49,5 @@ module.exports = async path => {
 
     return parse(sqlData);
 };
+
+module.exports = getArray;

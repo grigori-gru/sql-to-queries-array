@@ -1,3 +1,6 @@
+watch:
+	npm run test -- --watch
+
 test:
 	npm run test
 
