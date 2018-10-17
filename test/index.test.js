@@ -2,6 +2,8 @@ const assert = require('assert');
 const path = require('path');
 const app = require('..');
 
+// eslint-disable-next-line
+const sqlFunc = `CREATE FUNCTION some_name() RETURNS trigger AS $defaults$ BEGIN IF CONDITION THEN EXECUTE action(); END IF; IF CONDITION THEN EXECUTE action(); END IF; RETURN NEW; END; $defaults$ LANGUAGE plpgsql;`;
 const createArr = item => Array.from({length: 5}, () => item);
 
 describe('Test app', () => {
@@ -24,7 +26,7 @@ describe('Test app', () => {
         const pathToFile = path.resolve(__dirname, 'fixtures', '2.sql');
         const result = await app(pathToFile);
 
-        assert.deepEqual(result, expected);
+        assert.deepEqual(result, [...expected, sqlFunc]);
     });
 
     it('Expect parser will not work  and throws error if file has incorrect extension', () => {
