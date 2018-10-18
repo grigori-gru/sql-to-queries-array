@@ -2,7 +2,8 @@ const {resolve} = require('path');
 const {extname} = require('path');
 const {readFile, lstat, readdir} = require('fs').promises;
 
-
+const isFunction = str =>
+    str.toUpperCase().startsWith('CREATE FUNCTION') || str.toUpperCase().startsWith('CREATE OR REPLACE FUNCTION');
 const parse = data => {
     let state = 'out';
     return data
@@ -18,7 +19,7 @@ const parse = data => {
                     if (!str.endsWith(';')) {
                         state = 'query';
                     }
-                    if (str.toUpperCase().startsWith('CREATE FUNCTION')) {
+                    if (isFunction(str)) {
                         state = 'function';
                     }
                     result = [...acc, str];
