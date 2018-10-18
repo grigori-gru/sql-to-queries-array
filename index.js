@@ -2,15 +2,53 @@ const {resolve} = require('path');
 const {extname} = require('path');
 const {readFile, lstat, readdir} = require('fs').promises;
 
-const parse = data => data
-    .split('\n')
-    .filter(Boolean)
-    .map(str => str.trim())
-    .filter(str => !str.startsWith('--') && !str.startsWith('/*'))
-    .join(' ')
-    .split(';')
-    .filter(Boolean)
-    .map(str => `${str.trim()};`);
+
+const parse = data => {
+    let state = 'out';
+    return data
+        .split('\n')
+        .filter(Boolean)
+        .map(str => str.trim())
+        .filter(str => !str.startsWith('--') && !str.startsWith('/*'))
+        .reduce((acc, str) => {
+            let result;
+
+            switch (state) {
+                case 'out':
+                    if (!str.endsWith(';')) {
+                        state = 'query';
+                    }
+                    if (str.toUpperCase().startsWith('CREATE FUNCTION')) {
+                        state = 'function';
+                    }
+                    result = [...acc, str];
+                    break;
+
+                case 'function':
+                    if (str.toUpperCase() === 'END;') {
+                        state = 'end';
+                    }
+
+                    result = [...acc.slice(0, -1), `${acc.slice(-1)} ${str}`];
+                    break;
+
+                case 'end':
+                    state = 'out';
+
+                    result = [...acc.slice(0, -1), `${acc.slice(-1)} ${str}`];
+                    break;
+
+                case 'query':
+                    if (str.endsWith(';')) {
+                        state = 'out';
+                    }
+                    result = [...acc.slice(0, -1), `${acc.slice(-1)} ${str}`];
+                    break;
+            }
+
+            return result;
+        }, []);
+};
 
 const isDir = async path => {
     const stat = await lstat(path);
