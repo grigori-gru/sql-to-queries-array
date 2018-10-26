@@ -1,16 +1,14 @@
 const assert = require('assert');
 const path = require('path');
-const app = require('..');
+const app = require('../');
 
 const createArr = item => Array.from({length: 5}, () => item);
 
-// eslint-disable-next-line
-const sqlFunc = `FUNCTION some_name() RETURNS trigger AS $defaults$ BEGIN IF CONDITION THEN EXECUTE action(); END IF; IF CONDITION THEN EXECUTE action(); END IF; RETURN NEW; END; $defaults$ LANGUAGE plpgsql;`;
-const createFunc = `CREATE ${sqlFunc}`;
-const replaceFunc = `CREATE OR REPLACE ${sqlFunc}`;
-
-
 describe('Test app', () => {
+    // eslint-disable-next-line
+    const sqlFunc = `FUNCTION some_name() RETURNS trigger AS $defaults$ BEGIN IF CONDITION THEN EXECUTE action(); END IF; IF CONDITION THEN EXECUTE action(); END IF; RETURN NEW; END; $defaults$ LANGUAGE plpgsql;`;
+    const createFunc = `CREATE ${sqlFunc}`;
+    const replaceFunc = `CREATE OR REPLACE ${sqlFunc}`;
     const sqlCommand = `SELECT * FROM table_name WHERE name = 'name';`;
 
     // it's query from release10.sql
