@@ -22,7 +22,7 @@ You can use it with either with one SQL file or directory.
 const arr = await sqlToArray(pathToFile);
 ```
 
-### With file
+### With directory
 
 
 If you need to include only some names of files you shold add that base name, for example `release` as second param.
